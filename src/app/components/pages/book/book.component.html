@@ -1,0 +1,146 @@
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary mt-2" style="float: right;" (click)="addBook()">Add Book</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="iq-card">
+                    <div class="iq-card-header d-flex justify-content-between">
+                        <div class="col-md-12 d-flex pl-0 pr-0 mt-3">
+                            <div class="col-md-4 pl-0">
+                                <div class="iq-header-title mt-2">
+                                    <h4 class="card-title">List of Books</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input type="text" [(ngModel)]="sortingBook" (input)="searchBook()" class="form-control" placeholder="Search......">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control" style="width: 40%; float: right;" (change)="selectBookType($event)">
+                                      <option value="all">All Books</option>
+                                      <option value="fav">Favourite Books</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="iq-card-body">
+                        <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">image</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Favorite</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="bookListTemp.length > 0">
+                                    <tr *ngFor="let list of bookListTemp, let i = index">
+                                        <th scope="row" class="pt-4">{{ i+1 }}</th>
+                                        <td><img [src]="list.imageUrl" style="width: 50px; height: 50px;"></td>
+                                        <td class="pt-4">{{ list.name }}</td>
+                                        <td class="pt-4">{{ list.description }}</td>
+                                        <td class="pt-4">
+                                            <span class="badge badge-pill badge-danger" *ngIf="list.favorite === false">false</span>
+                                            <span class="badge badge-pill badge-success" *ngIf="list.favorite === true">true</span>
+                                        </td>
+                                        <td class="pt-4">
+                                            <p class="badge badge-primary font-weight-normal mr-2" style="cursor: pointer;" (click)="editBook(list.id)">edit</p>
+                                            <p class="badge badge-danger font-weight-normal" style="cursor: pointer;" (click)="deleteBook(list.id)">delete</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="bookListTemp.length < 1">
+                                    <div class="col-12 mt-4">
+                                        <p class="" style="color: #2165bd; text-align: center;">No Data.....</p>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Create Book -->
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" [nzWidth]="620" nzTitle="Create Book" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSub">
+                    <form [formGroup]="bookForm">
+                        <div class="form-group">
+                            <label for="text">Name:</label>
+                            <input type="text" formControlName="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="text">Image Url:</label>
+                            <input type="text" formControlName="imageUrl" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="text">Description:</label>
+                            <input type="text" formControlName="description" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Favorite:</label>
+                            <select formControlName="favorite" class="form-control">
+                              <option value="true">True</option>
+                              <option value="false">False</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-primary mt-4" (click)="submitBook()" [disabled]="!bookForm.valid">Submit</button>
+                    </form>
+                </nz-spin>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>
+
+<!-- Create Book -->
+<nz-drawer [nzClosable]="false" [nzVisible]="visible2" nzPlacement="right" [nzWidth]="620" nzTitle="Edit Book" (nzOnClose)="close2()">
+    <ng-container *nzDrawerContent>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSub">
+                    <form [formGroup]="bookForm">
+                        <div class="form-group">
+                            <label for="text">Name:</label>
+                            <input type="text" formControlName="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="text">Image Url:</label>
+                            <input type="text" formControlName="imageUrl" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="text">Description:</label>
+                            <input type="text" formControlName="description" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Favorite:</label>
+                            <select formControlName="favorite" class="form-control">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-primary mt-4" (click)="submitBookEdit()" [disabled]="!bookForm.valid">Submit</button>
+                    </form>
+                </nz-spin>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>

@@ -1,0 +1,115 @@
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-primary mt-2" style="float: right;" (click)="addCategory()">Add Category</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div class="iq-card">
+                    <div class="iq-card-header d-flex justify-content-between">
+                        <div class="col-md-12 d-flex pl-0 pr-0 mt-3">
+                            <div class="col-md-6 pl-0">
+                                <div class="iq-header-title mt-2">
+                                    <h4 class="card-title">List of Categories</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" style="float: right; width: 70%;">
+                                    <input type="text" [(ngModel)]="sortingCategory" (input)="searchCategory()" class="form-control" placeholder="Search......">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="iq-card-body">
+                        <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd;" nzSpin="true"></i></ng-template>
+                        <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinning">
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Date Created</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="CategoryListTemp.length > 0">
+                                    <tr *ngFor="let list of CategoryListTemp, let i = index">
+                                        <th scope="row" class="pt-4">{{ i+1 }}</th>
+                                        <td class="pt-4">{{ list.name }}</td>
+                                        <td class="pt-4">{{ list.createdAt | date }}</td>
+                                        <td class="pt-4">
+                                            <p class="badge badge-primary font-weight-normal mr-2" style="cursor: pointer;" (click)="editCategory(list.id)">edit</p>
+                                            <p class="badge badge-danger font-weight-normal" style="cursor: pointer;" (click)="deleteCategory(list.id)">delete</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="CategoryListTemp.length < 1">
+                                    <div class="col-12 mt-4">
+                                        <p class="" style="color: #2165bd; text-align: center;">No Data.....</p>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </nz-spin>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Create Category -->
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" nzPlacement="right" [nzWidth]="620" nzTitle="Create Category" (nzOnClose)="close()">
+    <ng-container *nzDrawerContent>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSub">
+                    <form [formGroup]="categoryForm">
+                        <div class="form-group">
+                            <label for="email">Name:</label>
+                            <input type="email" formControlName="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Favorite:</label>
+                            <select formControlName="isFavorite" class="form-control">
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-primary mt-4" (click)="submitCategory()" [disabled]="!categoryForm.valid">Submit</button>
+                    </form>
+                </nz-spin>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>
+
+<!-- Edit Category -->
+<nz-drawer [nzClosable]="false" [nzVisible]="visible2" nzPlacement="right" [nzWidth]="620" nzTitle="Edit Category" (nzOnClose)="close2()">
+    <ng-container *nzDrawerContent>
+        <div class="row">
+            <div class="col-md-12">
+                <ng-template #indicatorTemplate><i nz-icon nzType="check-circle" class="mt-5" style="font-size: 30px; color: #2165bd; margin-top: 20px;" nzSpin="true"></i></ng-template>
+                <nz-spin simple [nzIndicator]="indicatorTemplate" [nzSpinning]="isSpinningSub">
+                    <form [formGroup]="categoryForm">
+                        <div class="form-group">
+                            <label for="email">Name:</label>
+                            <input type="email" formControlName="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Favorite:</label>
+                            <select formControlName="isFavorite" class="form-control">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                      </select>
+                        </div>
+                        <button type="submit" class="w-100 btn btn-primary mt-4" (click)="submitCategoryEdit()" [disabled]="!categoryForm.valid">Submit</button>
+                    </form>
+                </nz-spin>
+            </div>
+        </div>
+    </ng-container>
+</nz-drawer>
